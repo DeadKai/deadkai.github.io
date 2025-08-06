@@ -1,6 +1,6 @@
 # The URL the site will be built for
 theme = "Seje2"
-base_url = "https://deadkai.github.io"
+base_url = "https://deadkai.github.io/"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
