@@ -17,6 +17,6 @@ jobs:
       - name: Build site
         uses: shalzz/zola-deploy-action@v0.17.2
         env:
-          BUILD_DIR: .
+          BUILD_DIR: my-site
           BUILD_FLAGS: --drafts
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
