@@ -10,15 +10,6 @@
     <div class="post-content">
         {{ page.content | safe }}
     </div>
-    <div class="post-meta">
-        <span class="post-time">
-        {% if config.extra.seje_chinese_date %}
-            {{ macros::format_chinese_date(year=page.year, month=page.month, day=page.day) }}
-        {% else %}
-            {{ page.date|date(format="%Y/%m/%d") }}
-        {% endif %}
-        </span>
-    </div>
 </article>
 
 <div class="prev_next">

@@ -20,13 +20,6 @@
                 {% endif %}
             {% endif %}
         </div>
-        <div class="post-meta">
-            {% if config.extra.seje_chinese_date %}
-                {{ macros::format_chinese_date(year=post.year, month=post.month, day=post.day) }}
-            {% else %}
-                {{ post.date|date(format="%Y/%m/%d") }}
-            {% endif %}
-        </div>
     </article>
     {% endfor %}
 {# {{ paginator.next }} #}
