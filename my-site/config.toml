@@ -1,22 +1,52 @@
 # The URL the site will be built for
-theme = "Seje2"
 base_url = "https://deadkai.github.io/"
-
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
+# What language to use
+default_language = "zh-tw"
+# Generate RSS feeds
+generate_feeds = true
 
 # Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
+build_search_index = false
 
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = true
+highlight_code = false
 
 [extra]
-# Put all your custom variables here
-menu = [
-    { name = "Home", url = "$BASE_URL" },
-    { name = "Blog", url = "$BASE_URL/blog" },
-    { name = "About", url = "$BASE_URL/about" },
+# show Chinese date format instead of normal date format
+seje_chinese_date = true
+# show summary instead of the whole article on the index page
+seje_show_summary_only = false
+# Google Font API mirror URLs (for China mainland users, try fonts.loli.net)
+seje_font_mirror = "fonts.googleapis.com"
+# whether use traditional Chinese style vertical layout
+seje_vertical_layout = false
+# additional custom fonts to include (must be in CSS font-family format)
+seje_custom_fonts = ""
+# whether enable darkmode. Possible values: auto, always, never
+seje_darkmode = "auto"
+# MathJax Latex Support (won't load the mathjax.js if seje_mathjax is false)
+seje_mathjax = false
+# Your site blog links
+seje_menu_links = [
+    {url = "$BASE_URL/", name = "home"},
+    {url = "$BASE_URL/archives", name = "archives"},
+    {url = "$BASE_URL/about",  name = "about"},
+    {url = "$BASE_URL/atom.xml", name = "rss"},
 ]
+
+[languages.zh-tw.translations]
+title = "寫嘢"
+home = "主頁"
+archives = "歸檔"
+about = "關於"
+rss = "訂閱"
+more = "查看全文"
+olderArticle = "舊文"
+newer = "上一篇"
+older = "下一篇"
+loading = "加載中..."
+
