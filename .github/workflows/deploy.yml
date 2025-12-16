@@ -14,10 +14,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-      - name: Build site
+      - name: Build and Deploy
         uses: shalzz/zola-deploy-action@v0.17.2
         env:
           BUILD_DIR: my-site
-          GH_PAGES_BRANCH: main
+          PAGES_BRANCH: gh-pages
           BUILD_FLAGS: --drafts
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
