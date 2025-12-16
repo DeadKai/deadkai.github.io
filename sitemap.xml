@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://deadkai.github.io/</loc>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/about/</loc>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/archives/</loc>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/docker-best-practices/</loc>
+        <lastmod>2024-12-01T14:30:00Z</lastmod>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/git-rebase-vs-merge/</loc>
+        <lastmod>2024-11-20T09:15:00Z</lastmod>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/python-async-programming/</loc>
+        <lastmod>2024-12-10T16:45:00Z</lastmod>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/system-design-basics/</loc>
+        <lastmod>2024-12-05T11:20:00Z</lastmod>
+    </url>
+    <url>
+        <loc>https://deadkai.github.io/understanding-rust-ownership/</loc>
+        <lastmod>2024-11-15T10:00:00Z</lastmod>
+    </url>
+</urlset>

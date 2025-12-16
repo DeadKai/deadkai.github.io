@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://deadkai.github.io/atom.xml">
+    
+    
+    
+        
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>Async Programming in Python: A Practical Guide - title</title>
+    <meta charset="utf-8">
+    <meta name="title" content="Async Programming in Python: A Practical Guide - title">
+    <meta name="description" content="">
+    <meta property="og:image:width" content="200" />
+    <meta property="og:image:height" content="200" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/style.css">
+    
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/autodarkmode.css">
+    
+    
+    <style>
+    @media screen and (min-width: 320px) {
+        body {
+            font-size: calc(16px + 2 * ((100vw - 320px) / 960));
+        }
+    }
+    </style>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&amp;family=Noto+Serif+KR:wght@400;700&amp;Noto+Serif+SC:wght@400;700&display=swap">
+    <style>body { font-family: 'Source Serif Pro', 'Source Han Serif TC', 'Noto Serif CJK TC', 'Noto Serif TC', 'Noto Serif KR', 'Noto Serif SC', serif }</style>
+    
+
+    <!-- MathJax Latex Support Script-->
+    
+
+</head>
+<body>
+    
+    <header class="header">
+        <div class="blog-title"><a href="https:&#x2F;&#x2F;deadkai.github.io" class="logo">title</a></div>
+        <nav class="navbar">
+    <ul class="menu">
+        
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;" class="menu-item-link">home</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;archives" class="menu-item-link">archives</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;about" class="menu-item-link">about</a>
+            
+        </li>
+        
+    </ul>
+</nav>
+
+    </header>
+    
+    <main class="main">
+        
+<article class="post">
+    <div class="post-title">
+        <h1 class="title">Async Programming in Python: A Practical Guide</h1>
+    </div>
+    <div class="post-content">
+        <p>Asynchronous programming in Python has evolved significantly with the introduction of <code>async</code> and <code>await</code> keywords. Understanding when and how to use async can dramatically improve your application's performance.</p>
+<h2 id="what-is-async-programming">What is Async Programming?</h2>
+<p>Async programming allows your program to handle multiple operations concurrently without using multiple threads. This is particularly valuable for I/O-bound operations like:</p>
+<ul>
+<li>Network requests</li>
+<li>Database queries</li>
+<li>File operations</li>
+<li>API calls</li>
+</ul>
+<h2 id="sync-vs-async-a-simple-example">Sync vs Async: A Simple Example</h2>
+<h3 id="synchronous-code">Synchronous Code</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>time
+</span><span style="color:#b48ead;">import </span><span>requests
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">fetch_url</span><span>(</span><span style="color:#bf616a;">url</span><span>):
+</span><span>    response = requests.</span><span style="color:#bf616a;">get</span><span>(url)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>response.text
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    urls = [&#39;</span><span style="color:#a3be8c;">https://api.example.com/1</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">https://api.example.com/2</span><span>&#39;]
+</span><span>    start = time.</span><span style="color:#bf616a;">time</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">for </span><span>url </span><span style="color:#b48ead;">in </span><span>urls:
+</span><span>        data = </span><span style="color:#bf616a;">fetch_url</span><span>(url)
+</span><span>        </span><span style="color:#96b5b4;">print</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">Fetched </span><span>{</span><span style="color:#96b5b4;">len</span><span>(data)}</span><span style="color:#a3be8c;"> bytes</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">print</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">Time taken: </span><span>{time.</span><span style="color:#bf616a;">time</span><span>() - start</span><span style="color:#d08770;">:.2f</span><span>}</span><span style="color:#a3be8c;">s</span><span>&quot;)
+</span><span>
+</span><span style="color:#65737e;"># Time taken: ~4.0s (2 seconds per request)
+</span></code></pre>
+<h3 id="asynchronous-code">Asynchronous Code</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>asyncio
+</span><span style="color:#b48ead;">import </span><span>aiohttp
+</span><span style="color:#b48ead;">import </span><span>time
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">fetch_url</span><span>(</span><span style="color:#bf616a;">session</span><span>, </span><span style="color:#bf616a;">url</span><span>):
+</span><span>    </span><span style="color:#b48ead;">async with </span><span>session.</span><span style="color:#bf616a;">get</span><span>(url) </span><span style="color:#b48ead;">as </span><span>response:
+</span><span>        </span><span style="color:#b48ead;">return await </span><span>response.</span><span style="color:#bf616a;">text</span><span>()
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    urls = [&#39;</span><span style="color:#a3be8c;">https://api.example.com/1</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">https://api.example.com/2</span><span>&#39;]
+</span><span>    start = time.</span><span style="color:#bf616a;">time</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">async with </span><span>aiohttp.</span><span style="color:#bf616a;">ClientSession</span><span>() </span><span style="color:#b48ead;">as </span><span>session:
+</span><span>        tasks = [</span><span style="color:#bf616a;">fetch_url</span><span>(session, url) </span><span style="color:#b48ead;">for </span><span>url </span><span style="color:#b48ead;">in </span><span>urls]
+</span><span>        results = </span><span style="color:#b48ead;">await </span><span>asyncio.</span><span style="color:#bf616a;">gather</span><span>(*tasks)
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">for </span><span>data </span><span style="color:#b48ead;">in </span><span>results:
+</span><span>            </span><span style="color:#96b5b4;">print</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">Fetched </span><span>{</span><span style="color:#96b5b4;">len</span><span>(data)}</span><span style="color:#a3be8c;"> bytes</span><span>&quot;)
+</span><span>
+</span><span>    </span><span style="color:#96b5b4;">print</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">Time taken: </span><span>{time.</span><span style="color:#bf616a;">time</span><span>() - start</span><span style="color:#d08770;">:.2f</span><span>}</span><span style="color:#a3be8c;">s</span><span>&quot;)
+</span><span>
+</span><span>asyncio.</span><span style="color:#bf616a;">run</span><span>(</span><span style="color:#bf616a;">main</span><span>())
+</span><span style="color:#65737e;"># Time taken: ~2.0s (requests happen concurrently!)
+</span></code></pre>
+<p>The async version completes in half the time because requests run concurrently.</p>
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="coroutines">Coroutines</h3>
+<p>Functions defined with <code>async def</code> are coroutines. They don't execute immediately when called—they return a coroutine object:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">greet</span><span>(</span><span style="color:#bf616a;">name</span><span>):
+</span><span>    </span><span style="color:#b48ead;">return f</span><span>&quot;</span><span style="color:#a3be8c;">Hello, </span><span>{name}&quot;
+</span><span>
+</span><span style="color:#65737e;"># This doesn&#39;t print anything:
+</span><span>coro = </span><span style="color:#bf616a;">greet</span><span>(&quot;</span><span style="color:#a3be8c;">Alice</span><span>&quot;)
+</span><span>
+</span><span style="color:#65737e;"># This executes the coroutine:
+</span><span>result = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">greet</span><span>(&quot;</span><span style="color:#a3be8c;">Alice</span><span>&quot;)  </span><span style="color:#65737e;"># Must be inside async function
+</span></code></pre>
+<h3 id="the-event-loop">The Event Loop</h3>
+<p>The event loop manages and executes async tasks. It's the core of async programming:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># Python 3.7+
+</span><span>asyncio.</span><span style="color:#bf616a;">run</span><span>(</span><span style="color:#bf616a;">main</span><span>())
+</span><span>
+</span><span style="color:#65737e;"># Older approach
+</span><span>loop = asyncio.</span><span style="color:#bf616a;">get_event_loop</span><span>()
+</span><span>loop.</span><span style="color:#bf616a;">run_until_complete</span><span>(</span><span style="color:#bf616a;">main</span><span>())
+</span><span>loop.</span><span style="color:#bf616a;">close</span><span>()
+</span></code></pre>
+<h3 id="await-keyword">await Keyword</h3>
+<p><code>await</code> pauses the coroutine until the awaited operation completes, allowing other coroutines to run:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">process_data</span><span>():
+</span><span>    data = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">fetch_data</span><span>()  </span><span style="color:#65737e;"># Waits here
+</span><span>    result = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">transform_data</span><span>(data)  </span><span style="color:#65737e;"># Then waits here
+</span><span>    </span><span style="color:#b48ead;">return </span><span>result
+</span></code></pre>
+<h3 id="creating-tasks">Creating Tasks</h3>
+<p>Tasks allow coroutines to run concurrently:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    </span><span style="color:#65737e;"># These run concurrently
+</span><span>    task1 = asyncio.</span><span style="color:#bf616a;">create_task</span><span>(</span><span style="color:#bf616a;">fetch_data</span><span>(</span><span style="color:#d08770;">1</span><span>))
+</span><span>    task2 = asyncio.</span><span style="color:#bf616a;">create_task</span><span>(</span><span style="color:#bf616a;">fetch_data</span><span>(</span><span style="color:#d08770;">2</span><span>))
+</span><span>
+</span><span>    result1 = </span><span style="color:#b48ead;">await </span><span>task1
+</span><span>    result2 = </span><span style="color:#b48ead;">await </span><span>task2
+</span></code></pre>
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="gathering-multiple-coroutines">Gathering Multiple Coroutines</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    results = </span><span style="color:#b48ead;">await </span><span>asyncio.</span><span style="color:#bf616a;">gather</span><span>(
+</span><span>        </span><span style="color:#bf616a;">fetch_data</span><span>(</span><span style="color:#d08770;">1</span><span>),
+</span><span>        </span><span style="color:#bf616a;">fetch_data</span><span>(</span><span style="color:#d08770;">2</span><span>),
+</span><span>        </span><span style="color:#bf616a;">fetch_data</span><span>(</span><span style="color:#d08770;">3</span><span>)
+</span><span>    )
+</span><span>    </span><span style="color:#65737e;"># All three run concurrently
+</span><span>    </span><span style="color:#96b5b4;">print</span><span>(results)  </span><span style="color:#65737e;"># [result1, result2, result3]
+</span></code></pre>
+<h3 id="handling-timeouts">Handling Timeouts</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">fetch_with_timeout</span><span>(</span><span style="color:#bf616a;">url</span><span>):
+</span><span>    </span><span style="color:#b48ead;">try</span><span>:
+</span><span>        </span><span style="color:#b48ead;">async with </span><span>aiohttp.</span><span style="color:#bf616a;">ClientSession</span><span>() </span><span style="color:#b48ead;">as </span><span>session:
+</span><span>            </span><span style="color:#b48ead;">async with </span><span>asyncio.</span><span style="color:#bf616a;">timeout</span><span>(</span><span style="color:#d08770;">5.0</span><span>):  </span><span style="color:#65737e;"># Python 3.11+
+</span><span>                response = </span><span style="color:#b48ead;">await </span><span>session.</span><span style="color:#bf616a;">get</span><span>(url)
+</span><span>                </span><span style="color:#b48ead;">return await </span><span>response.</span><span style="color:#bf616a;">text</span><span>()
+</span><span>    </span><span style="color:#b48ead;">except </span><span>asyncio.TimeoutError:
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">None
+</span></code></pre>
+<h3 id="running-background-tasks">Running Background Tasks</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">background_task</span><span>():
+</span><span>    </span><span style="color:#b48ead;">while </span><span style="color:#d08770;">True</span><span>:
+</span><span>        </span><span style="color:#b48ead;">await </span><span>asyncio.</span><span style="color:#bf616a;">sleep</span><span>(</span><span style="color:#d08770;">60</span><span>)
+</span><span>        </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">cleanup_old_data</span><span>()
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    </span><span style="color:#65737e;"># Start background task
+</span><span>    task = asyncio.</span><span style="color:#bf616a;">create_task</span><span>(</span><span style="color:#bf616a;">background_task</span><span>())
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Do other work
+</span><span>    </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">handle_requests</span><span>()
+</span><span>
+</span><span>    </span><span style="color:#65737e;"># Cancel background task when done
+</span><span>    task.</span><span style="color:#bf616a;">cancel</span><span>()
+</span></code></pre>
+<h3 id="async-context-managers">Async Context Managers</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">class </span><span style="color:#ebcb8b;">AsyncDatabase</span><span style="color:#eff1f5;">:
+</span><span>    </span><span style="color:#b48ead;">async def </span><span style="color:#96b5b4;">__aenter__</span><span>(</span><span style="color:#bf616a;">self</span><span>):
+</span><span>        </span><span style="color:#bf616a;">self</span><span>.connection = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">create_connection</span><span>()
+</span><span>        </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">self
+</span><span>
+</span><span>    </span><span style="color:#b48ead;">async def </span><span style="color:#96b5b4;">__aexit__</span><span>(</span><span style="color:#bf616a;">self</span><span>, </span><span style="color:#bf616a;">exc_type</span><span>, </span><span style="color:#bf616a;">exc_val</span><span>, </span><span style="color:#bf616a;">exc_tb</span><span>):
+</span><span>        </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">self</span><span>.connection.</span><span style="color:#bf616a;">close</span><span>()
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">main</span><span>():
+</span><span>    </span><span style="color:#b48ead;">async with </span><span style="color:#bf616a;">AsyncDatabase</span><span>() </span><span style="color:#b48ead;">as </span><span>db:
+</span><span>        data = </span><span style="color:#b48ead;">await </span><span>db.</span><span style="color:#bf616a;">query</span><span>(&quot;</span><span style="color:#b48ead;">SELECT </span><span style="color:#bf616a;">* </span><span style="color:#b48ead;">FROM</span><span style="color:#a3be8c;"> users</span><span>&quot;)
+</span></code></pre>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="blocking-the-event-loop">Blocking the Event Loop</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># BAD: This blocks the entire event loop
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">bad_sleep</span><span>():
+</span><span>    time.</span><span style="color:#bf616a;">sleep</span><span>(</span><span style="color:#d08770;">5</span><span>)  </span><span style="color:#65737e;"># Blocks everything!
+</span><span>
+</span><span style="color:#65737e;"># GOOD: Use async sleep
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">good_sleep</span><span>():
+</span><span>    </span><span style="color:#b48ead;">await </span><span>asyncio.</span><span style="color:#bf616a;">sleep</span><span>(</span><span style="color:#d08770;">5</span><span>)  </span><span style="color:#65737e;"># Allows other tasks to run
+</span></code></pre>
+<h3 id="forgetting-to-await">Forgetting to await</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># BAD: Coroutine never executes
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">process</span><span>():
+</span><span>    </span><span style="color:#bf616a;">fetch_data</span><span>()  </span><span style="color:#65737e;"># Missing await!
+</span><span>
+</span><span style="color:#65737e;"># GOOD
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">process</span><span>():
+</span><span>    </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">fetch_data</span><span>()
+</span></code></pre>
+<h3 id="mixing-sync-and-async">Mixing Sync and Async</h3>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># BAD: Can&#39;t use await outside async function
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">sync_function</span><span>():
+</span><span>    result = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">async_function</span><span>()  </span><span style="color:#65737e;"># SyntaxError!
+</span><span>
+</span><span style="color:#65737e;"># GOOD: Use asyncio.run() or make function async
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">async_function_caller</span><span>():
+</span><span>    result = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">async_function</span><span>()
+</span></code></pre>
+<h2 id="when-to-use-async">When to Use Async</h2>
+<h3 id="good-use-cases">Good Use Cases</h3>
+<ul>
+<li><strong>I/O-bound operations</strong>: Network requests, database queries, file operations</li>
+<li><strong>Many concurrent operations</strong>: Handling hundreds of simultaneous connections</li>
+<li><strong>Real-time applications</strong>: WebSockets, chat servers, streaming</li>
+</ul>
+<h3 id="bad-use-cases">Bad Use Cases</h3>
+<ul>
+<li><strong>CPU-bound operations</strong>: Heavy computation, image processing, data crunching</li>
+<li><strong>Simple scripts</strong>: Async adds complexity for minimal benefit</li>
+<li><strong>Legacy codebases</strong>: Retrofitting async can be challenging</li>
+</ul>
+<p>For CPU-bound tasks, use <code>multiprocessing</code> instead:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">from </span><span>multiprocessing </span><span style="color:#b48ead;">import </span><span>Pool
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">cpu_intensive</span><span>(</span><span style="color:#bf616a;">n</span><span>):
+</span><span>    </span><span style="color:#b48ead;">return </span><span style="color:#96b5b4;">sum</span><span>(i*i </span><span style="color:#b48ead;">for </span><span>i </span><span style="color:#b48ead;">in </span><span style="color:#96b5b4;">range</span><span>(n))
+</span><span>
+</span><span style="color:#b48ead;">with </span><span style="color:#bf616a;">Pool</span><span>(</span><span style="color:#d08770;">4</span><span>) </span><span style="color:#b48ead;">as </span><span>p:
+</span><span>    results = p.</span><span style="color:#bf616a;">map</span><span>(cpu_intensive, [</span><span style="color:#d08770;">10</span><span>**</span><span style="color:#d08770;">7</span><span>, </span><span style="color:#d08770;">10</span><span>**</span><span style="color:#d08770;">7</span><span>, </span><span style="color:#d08770;">10</span><span>**</span><span style="color:#d08770;">7</span><span>, </span><span style="color:#d08770;">10</span><span>**</span><span style="color:#d08770;">7</span><span>])
+</span></code></pre>
+<h2 id="real-world-example-web-scraper">Real-World Example: Web Scraper</h2>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#b48ead;">import </span><span>asyncio
+</span><span style="color:#b48ead;">import </span><span>aiohttp
+</span><span style="color:#b48ead;">from </span><span>bs4 </span><span style="color:#b48ead;">import </span><span>BeautifulSoup
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">fetch_page</span><span>(</span><span style="color:#bf616a;">session</span><span>, </span><span style="color:#bf616a;">url</span><span>):
+</span><span>    </span><span style="color:#b48ead;">async with </span><span>session.</span><span style="color:#bf616a;">get</span><span>(url) </span><span style="color:#b48ead;">as </span><span>response:
+</span><span>        </span><span style="color:#b48ead;">return await </span><span>response.</span><span style="color:#bf616a;">text</span><span>()
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">parse_page</span><span>(</span><span style="color:#bf616a;">html</span><span>):
+</span><span>    soup = </span><span style="color:#bf616a;">BeautifulSoup</span><span>(html, &#39;</span><span style="color:#a3be8c;">html.parser</span><span>&#39;)
+</span><span>    </span><span style="color:#b48ead;">return </span><span>soup.</span><span style="color:#bf616a;">find_all</span><span>(&#39;</span><span style="color:#a3be8c;">a</span><span>&#39;, </span><span style="color:#bf616a;">href</span><span>=</span><span style="color:#d08770;">True</span><span>)
+</span><span>
+</span><span style="color:#b48ead;">async def </span><span style="color:#8fa1b3;">scrape_site</span><span>(</span><span style="color:#bf616a;">urls</span><span>):
+</span><span>    </span><span style="color:#b48ead;">async with </span><span>aiohttp.</span><span style="color:#bf616a;">ClientSession</span><span>() </span><span style="color:#b48ead;">as </span><span>session:
+</span><span>        tasks = [</span><span style="color:#bf616a;">fetch_page</span><span>(session, url) </span><span style="color:#b48ead;">for </span><span>url </span><span style="color:#b48ead;">in </span><span>urls]
+</span><span>        pages = </span><span style="color:#b48ead;">await </span><span>asyncio.</span><span style="color:#bf616a;">gather</span><span>(*tasks)
+</span><span>
+</span><span>        all_links = []
+</span><span>        </span><span style="color:#b48ead;">for </span><span>html </span><span style="color:#b48ead;">in </span><span>pages:
+</span><span>            links = </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">parse_page</span><span>(html)
+</span><span>            all_links.</span><span style="color:#bf616a;">extend</span><span>(links)
+</span><span>
+</span><span>        </span><span style="color:#b48ead;">return </span><span>all_links
+</span><span>
+</span><span>urls = [</span><span style="color:#b48ead;">f</span><span>&#39;</span><span style="color:#a3be8c;">https://example.com/page</span><span>{i}&#39; </span><span style="color:#b48ead;">for </span><span>i </span><span style="color:#b48ead;">in </span><span style="color:#96b5b4;">range</span><span>(</span><span style="color:#d08770;">10</span><span>)]
+</span><span>links = asyncio.</span><span style="color:#bf616a;">run</span><span>(</span><span style="color:#bf616a;">scrape_site</span><span>(urls))
+</span><span style="color:#96b5b4;">print</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">Found </span><span>{</span><span style="color:#96b5b4;">len</span><span>(links)}</span><span style="color:#a3be8c;"> links</span><span>&quot;)
+</span></code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Async programming in Python is powerful but not a silver bullet. Key takeaways:</p>
+<ul>
+<li>Use async for I/O-bound operations</li>
+<li>Understand the event loop and how it schedules coroutines</li>
+<li>Always <code>await</code> your coroutines</li>
+<li>Don't block the event loop with synchronous code</li>
+<li>Consider whether the complexity is worth it for your use case</li>
+</ul>
+<p>When used appropriately, async can dramatically improve application performance and responsiveness. Start with simple examples, understand the fundamentals, and gradually incorporate async patterns where they provide clear benefits.</p>
+
+    </div>
+</article>
+
+<div class="prev_next">
+<nav id="prev_next">
+    <div class="prev">
+        
+    </div>
+    <div class="next">
+        
+    </div>
+</nav>
+</div>
+
+<div class="post-comment">
+
+
+
+
+</div>
+
+    </main>
+    
+    <p class="license"></p>
+    
+</body>
+</html>

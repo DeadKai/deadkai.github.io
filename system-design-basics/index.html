@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://deadkai.github.io/atom.xml">
+    
+    
+    
+        
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>System Design Fundamentals: Building Scalable Applications - title</title>
+    <meta charset="utf-8">
+    <meta name="title" content="System Design Fundamentals: Building Scalable Applications - title">
+    <meta name="description" content="">
+    <meta property="og:image:width" content="200" />
+    <meta property="og:image:height" content="200" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/style.css">
+    
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/autodarkmode.css">
+    
+    
+    <style>
+    @media screen and (min-width: 320px) {
+        body {
+            font-size: calc(16px + 2 * ((100vw - 320px) / 960));
+        }
+    }
+    </style>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&amp;family=Noto+Serif+KR:wght@400;700&amp;Noto+Serif+SC:wght@400;700&display=swap">
+    <style>body { font-family: 'Source Serif Pro', 'Source Han Serif TC', 'Noto Serif CJK TC', 'Noto Serif TC', 'Noto Serif KR', 'Noto Serif SC', serif }</style>
+    
+
+    <!-- MathJax Latex Support Script-->
+    
+
+</head>
+<body>
+    
+    <header class="header">
+        <div class="blog-title"><a href="https:&#x2F;&#x2F;deadkai.github.io" class="logo">title</a></div>
+        <nav class="navbar">
+    <ul class="menu">
+        
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;" class="menu-item-link">home</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;archives" class="menu-item-link">archives</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;about" class="menu-item-link">about</a>
+            
+        </li>
+        
+    </ul>
+</nav>
+
+    </header>
+    
+    <main class="main">
+        
+<article class="post">
+    <div class="post-title">
+        <h1 class="title">System Design Fundamentals: Building Scalable Applications</h1>
+    </div>
+    <div class="post-content">
+        <p>System design is the art of building applications that can scale to millions of users while remaining reliable, maintainable, and cost-effective. Whether you're preparing for interviews or building production systems, understanding these fundamentals is essential.</p>
+<h2 id="key-principles">Key Principles</h2>
+<h3 id="1-scalability">1. Scalability</h3>
+<p>The ability to handle increased load by adding resources. Two types exist:</p>
+<p><strong>Vertical Scaling (Scale Up)</strong></p>
+<ul>
+<li>Add more power to existing machines (CPU, RAM, disk)</li>
+<li>Simpler to implement</li>
+<li>Limited by hardware constraints</li>
+<li>Single point of failure</li>
+</ul>
+<p><strong>Horizontal Scaling (Scale Out)</strong></p>
+<ul>
+<li>Add more machines to the pool</li>
+<li>Better fault tolerance</li>
+<li>More complex architecture</li>
+<li>Nearly unlimited scaling potential</li>
+</ul>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Vertical: 1 server with 32GB RAM
+</span><span>Horizontal: 8 servers with 4GB RAM each
+</span></code></pre>
+<h3 id="2-availability">2. Availability</h3>
+<p>The percentage of time a system is operational. Measured in &quot;nines&quot;:</p>
+<ul>
+<li>99% = 3.65 days downtime/year</li>
+<li>99.9% = 8.76 hours downtime/year</li>
+<li>99.99% = 52.6 minutes downtime/year</li>
+<li>99.999% = 5.26 minutes downtime/year</li>
+</ul>
+<p>Achieve high availability through:</p>
+<ul>
+<li>Redundancy (multiple instances)</li>
+<li>Failover mechanisms</li>
+<li>Health checks and monitoring</li>
+<li>Geographic distribution</li>
+</ul>
+<h3 id="3-reliability">3. Reliability</h3>
+<p>The probability that a system will produce correct outputs. Key strategies:</p>
+<ul>
+<li><strong>Replication</strong>: Multiple copies of data</li>
+<li><strong>Checksums</strong>: Verify data integrity</li>
+<li><strong>Monitoring</strong>: Detect issues early</li>
+<li><strong>Graceful degradation</strong>: Maintain core functionality during failures</li>
+</ul>
+<h2 id="core-components">Core Components</h2>
+<h3 id="load-balancers">Load Balancers</h3>
+<p>Distribute traffic across multiple servers:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>                    [Load Balancer]
+</span><span>                    /      |      \
+</span><span>            [Server 1] [Server 2] [Server 3]
+</span></code></pre>
+<p>Common algorithms:</p>
+<ul>
+<li><strong>Round Robin</strong>: Cycle through servers sequentially</li>
+<li><strong>Least Connections</strong>: Send to server with fewest active connections</li>
+<li><strong>IP Hash</strong>: Route based on client IP</li>
+<li><strong>Weighted</strong>: Assign capacity weights to servers</li>
+</ul>
+<h3 id="caching">Caching</h3>
+<p>Store frequently accessed data in faster storage:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># Without cache: ~100ms database query
+</span><span>user = database.</span><span style="color:#bf616a;">query</span><span>(&quot;</span><span style="color:#b48ead;">SELECT </span><span style="color:#bf616a;">* </span><span style="color:#b48ead;">FROM</span><span style="color:#a3be8c;"> users </span><span style="color:#b48ead;">WHERE</span><span style="color:#a3be8c;"> id</span><span>=</span><span style="color:#a3be8c;">?</span><span>&quot;, user_id)
+</span><span>
+</span><span style="color:#65737e;"># With cache: ~1ms memory lookup
+</span><span>user = cache.</span><span style="color:#bf616a;">get</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">user:</span><span>{user_id}&quot;)
+</span><span style="color:#b48ead;">if </span><span>not user:
+</span><span>    user = database.</span><span style="color:#bf616a;">query</span><span>(&quot;</span><span style="color:#b48ead;">SELECT </span><span style="color:#bf616a;">* </span><span style="color:#b48ead;">FROM</span><span style="color:#a3be8c;"> users </span><span style="color:#b48ead;">WHERE</span><span style="color:#a3be8c;"> id</span><span>=</span><span style="color:#a3be8c;">?</span><span>&quot;, user_id)
+</span><span>    cache.</span><span style="color:#bf616a;">set</span><span>(</span><span style="color:#b48ead;">f</span><span>&quot;</span><span style="color:#a3be8c;">user:</span><span>{user_id}&quot;, user, </span><span style="color:#bf616a;">ttl</span><span>=</span><span style="color:#d08770;">3600</span><span>)
+</span></code></pre>
+<p>Caching strategies:</p>
+<ul>
+<li><strong>Cache-Aside</strong>: Application manages cache</li>
+<li><strong>Write-Through</strong>: Write to cache and database simultaneously</li>
+<li><strong>Write-Back</strong>: Write to cache, async write to database</li>
+<li><strong>Refresh-Ahead</strong>: Proactively refresh before expiration</li>
+</ul>
+<h3 id="databases">Databases</h3>
+<h4 id="sql-vs-nosql">SQL vs NoSQL</h4>
+<p><strong>SQL (PostgreSQL, MySQL)</strong></p>
+<ul>
+<li>Structured schema</li>
+<li>ACID transactions</li>
+<li>Complex queries with JOINs</li>
+<li>Vertical scaling primarily</li>
+<li>Use for: Financial data, user accounts, structured relationships</li>
+</ul>
+<p><strong>NoSQL (MongoDB, Cassandra, DynamoDB)</strong></p>
+<ul>
+<li>Flexible schema</li>
+<li>BASE model (eventual consistency)</li>
+<li>Simple query patterns</li>
+<li>Horizontal scaling</li>
+<li>Use for: Logs, sessions, real-time analytics, unstructured data</li>
+</ul>
+<h4 id="database-sharding">Database Sharding</h4>
+<p>Split data across multiple databases:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>Users 1-1M    → Shard 1
+</span><span>Users 1M-2M   → Shard 2
+</span><span>Users 2M-3M   → Shard 3
+</span></code></pre>
+<p>Sharding strategies:</p>
+<ul>
+<li><strong>Range-based</strong>: Shard by ID ranges</li>
+<li><strong>Hash-based</strong>: Hash user ID to determine shard</li>
+<li><strong>Geographic</strong>: Shard by user location</li>
+<li><strong>Directory-based</strong>: Lookup table maps entities to shards</li>
+</ul>
+<h3 id="message-queues">Message Queues</h3>
+<p>Decouple services and handle asynchronous processing:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[API] → [Queue] → [Worker 1]
+</span><span>                → [Worker 2]
+</span><span>                → [Worker 3]
+</span></code></pre>
+<p>Benefits:</p>
+<ul>
+<li>Asynchronous processing</li>
+<li>Load smoothing</li>
+<li>Fault tolerance</li>
+<li>Retry mechanisms</li>
+</ul>
+<p>Popular options: RabbitMQ, Apache Kafka, AWS SQS, Redis</p>
+<h3 id="cdn-content-delivery-network">CDN (Content Delivery Network)</h3>
+<p>Distribute static content globally:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>User in Tokyo → Tokyo CDN node (10ms)
+</span><span>Instead of:
+</span><span>User in Tokyo → US origin server (200ms)
+</span></code></pre>
+<p>Cache:</p>
+<ul>
+<li>Images, CSS, JavaScript</li>
+<li>Videos and audio</li>
+<li>Static HTML pages</li>
+<li>API responses (with proper headers)</li>
+</ul>
+<h2 id="design-patterns">Design Patterns</h2>
+<h3 id="api-gateway">API Gateway</h3>
+<p>Single entry point for all client requests:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[Mobile App]  \
+</span><span>[Web App]     → [API Gateway] → [Microservices]
+</span><span>[3rd Party]   /
+</span></code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Authentication/authorization</li>
+<li>Rate limiting</li>
+<li>Request routing</li>
+<li>Response transformation</li>
+<li>Monitoring and logging</li>
+</ul>
+<h3 id="microservices-vs-monolith">Microservices vs Monolith</h3>
+<p><strong>Monolith</strong></p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[Single Application]
+</span><span>- User Management
+</span><span>- Order Processing
+</span><span>- Payment
+</span><span>- Inventory
+</span></code></pre>
+<p>Pros: Simple deployment, easier debugging, no network overhead
+Cons: Hard to scale specific features, technology lock-in</p>
+<p><strong>Microservices</strong></p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[User Service] [Order Service] [Payment Service] [Inventory Service]
+</span></code></pre>
+<p>Pros: Independent scaling, technology flexibility, team autonomy
+Cons: Complex deployment, network overhead, distributed debugging</p>
+<h3 id="event-driven-architecture">Event-Driven Architecture</h3>
+<p>Services communicate through events:</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[Order Service] → Event: OrderCreated → [Email Service]
+</span><span>                                      → [Inventory Service]
+</span><span>                                      → [Analytics Service]
+</span></code></pre>
+<p>Benefits:</p>
+<ul>
+<li>Loose coupling</li>
+<li>Easy to add new consumers</li>
+<li>Natural async processing</li>
+<li>Event replay for debugging</li>
+</ul>
+<h2 id="real-world-example-instagram-like-app">Real-World Example: Instagram-Like App</h2>
+<p>Let's design a simplified photo-sharing platform:</p>
+<h3 id="requirements">Requirements</h3>
+<ul>
+<li>Upload and view photos</li>
+<li>Follow users</li>
+<li>News feed</li>
+<li>Like and comment</li>
+<li>100M users, 50M daily active</li>
+</ul>
+<h3 id="high-level-design">High-Level Design</h3>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>[CDN] ← Static content (images)
+</span><span>  ↑
+</span><span>[Load Balancer]
+</span><span>  ↓
+</span><span>[API Servers (stateless)]
+</span><span>  ↓
+</span><span>[Cache Layer (Redis)]
+</span><span>  ↓
+</span><span>[Database Cluster]
+</span><span>  - User DB (PostgreSQL - sharded by user_id)
+</span><span>  - Photo DB (PostgreSQL - sharded by photo_id)
+</span><span>  - Feed DB (Cassandra - timeline data)
+</span><span>
+</span><span>[Object Storage (S3)]
+</span><span>  - Original photos
+</span><span>  - Processed photos (thumbnails, etc.)
+</span><span>
+</span><span>[Message Queue (Kafka)]
+</span><span>  - Photo processing jobs
+</span><span>  - Feed fanout jobs
+</span><span>  - Notification jobs
+</span></code></pre>
+<h3 id="key-decisions">Key Decisions</h3>
+<p><strong>Photo Storage</strong></p>
+<ul>
+<li>Store metadata in database (photo_id, user_id, caption, timestamp)</li>
+<li>Store actual images in object storage (S3)</li>
+<li>Use CDN for fast global delivery</li>
+<li>Generate multiple sizes asynchronously</li>
+</ul>
+<p><strong>News Feed</strong></p>
+<ul>
+<li>Pre-compute feeds for active users (fanout on write)</li>
+<li>On-demand generation for inactive users (fanout on read)</li>
+<li>Cache recent feed items in Redis</li>
+<li>Store feed in Cassandra for fast timeline queries</li>
+</ul>
+<p><strong>Scaling Strategy</strong></p>
+<ul>
+<li>Horizontal scaling for API servers</li>
+<li>Database sharding by user_id</li>
+<li>Read replicas for read-heavy workloads</li>
+<li>Async processing for non-critical tasks</li>
+</ul>
+<h2 id="common-interview-questions">Common Interview Questions</h2>
+<p><strong>&quot;Design a URL shortener&quot;</strong></p>
+<ul>
+<li>Hash function for URL → short code</li>
+<li>Database to store mappings</li>
+<li>Redirect service</li>
+<li>Analytics tracking</li>
+<li>Rate limiting</li>
+</ul>
+<p><strong>&quot;Design a rate limiter&quot;</strong></p>
+<ul>
+<li>Token bucket algorithm</li>
+<li>Store counters in Redis</li>
+<li>Distributed rate limiting</li>
+<li>Different limits per user tier</li>
+</ul>
+<p><strong>&quot;Design a chat application&quot;</strong></p>
+<ul>
+<li>WebSocket connections for real-time</li>
+<li>Message queue for reliability</li>
+<li>Database for message history</li>
+<li>Presence system for online status</li>
+</ul>
+<h2 id="monitoring-and-observability">Monitoring and Observability</h2>
+<p>Essential metrics to track:</p>
+<p><strong>System Metrics</strong></p>
+<ul>
+<li>CPU, memory, disk usage</li>
+<li>Network throughput</li>
+<li>Request latency (p50, p95, p99)</li>
+<li>Error rates</li>
+</ul>
+<p><strong>Business Metrics</strong></p>
+<ul>
+<li>Active users</li>
+<li>Request volume</li>
+<li>Conversion rates</li>
+<li>Revenue metrics</li>
+</ul>
+<p><strong>Tools</strong>: Prometheus, Grafana, DataDog, New Relic</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Great system design requires understanding trade-offs:</p>
+<ul>
+<li><strong>Consistency vs Availability</strong> (CAP theorem)</li>
+<li><strong>Latency vs Throughput</strong></li>
+<li><strong>Cost vs Performance</strong></li>
+<li><strong>Complexity vs Simplicity</strong></li>
+</ul>
+<p>Start simple and scale as needed. Premature optimization is the root of all evil. Design for the current scale + one order of magnitude, then iterate based on real metrics.</p>
+<p>The best system designers don't just know technologies—they understand business requirements, user needs, and how to make pragmatic trade-offs that deliver value.</p>
+
+    </div>
+</article>
+
+<div class="prev_next">
+<nav id="prev_next">
+    <div class="prev">
+        
+    </div>
+    <div class="next">
+        
+    </div>
+</nav>
+</div>
+
+<div class="post-comment">
+
+
+
+
+</div>
+
+    </main>
+    
+    <p class="license"></p>
+    
+</body>
+</html>

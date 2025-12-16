@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://deadkai.github.io/atom.xml">
+    
+    
+    
+        
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>Docker Best Practices for Production - title</title>
+    <meta charset="utf-8">
+    <meta name="title" content="Docker Best Practices for Production - title">
+    <meta name="description" content="">
+    <meta property="og:image:width" content="200" />
+    <meta property="og:image:height" content="200" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/style.css">
+    
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/autodarkmode.css">
+    
+    
+    <style>
+    @media screen and (min-width: 320px) {
+        body {
+            font-size: calc(16px + 2 * ((100vw - 320px) / 960));
+        }
+    }
+    </style>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&amp;family=Noto+Serif+KR:wght@400;700&amp;Noto+Serif+SC:wght@400;700&display=swap">
+    <style>body { font-family: 'Source Serif Pro', 'Source Han Serif TC', 'Noto Serif CJK TC', 'Noto Serif TC', 'Noto Serif KR', 'Noto Serif SC', serif }</style>
+    
+
+    <!-- MathJax Latex Support Script-->
+    
+
+</head>
+<body>
+    
+    <header class="header">
+        <div class="blog-title"><a href="https:&#x2F;&#x2F;deadkai.github.io" class="logo">title</a></div>
+        <nav class="navbar">
+    <ul class="menu">
+        
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;" class="menu-item-link">home</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;archives" class="menu-item-link">archives</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;about" class="menu-item-link">about</a>
+            
+        </li>
+        
+    </ul>
+</nav>
+
+    </header>
+    
+    <main class="main">
+        
+<article class="post">
+    <div class="post-title">
+        <h1 class="title">Docker Best Practices for Production</h1>
+    </div>
+    <div class="post-content">
+        <p>Docker has revolutionized how we build, ship, and run applications. However, creating production-ready Docker images requires following best practices to ensure security, efficiency, and reliability.</p>
+<h2 id="use-multi-stage-builds">Use Multi-Stage Builds</h2>
+<p>Multi-stage builds allow you to use multiple FROM statements in your Dockerfile, keeping your final image small by excluding build dependencies:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#65737e;"># Build stage
+</span><span style="color:#b48ead;">FROM</span><span> node:18-alpine </span><span style="color:#b48ead;">AS </span><span style="color:#bf616a;">builder
+</span><span style="color:#b48ead;">WORKDIR </span><span>/app
+</span><span style="color:#b48ead;">COPY</span><span> package*.json ./
+</span><span style="color:#b48ead;">RUN </span><span>npm ci
+</span><span style="color:#b48ead;">COPY</span><span> . .
+</span><span style="color:#b48ead;">RUN </span><span>npm run build
+</span><span>
+</span><span style="color:#65737e;"># Production stage
+</span><span style="color:#b48ead;">FROM</span><span> node:18-alpine
+</span><span style="color:#b48ead;">WORKDIR </span><span>/app
+</span><span style="color:#b48ead;">COPY</span><span> --from=</span><span style="color:#bf616a;">builder</span><span> /app/dist ./dist
+</span><span style="color:#b48ead;">COPY</span><span> --from=</span><span style="color:#bf616a;">builder</span><span> /app/node_modules ./node_modules
+</span><span style="color:#b48ead;">EXPOSE </span><span>3000
+</span><span>CMD [&quot;</span><span style="color:#a3be8c;">node</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">dist/index.js</span><span>&quot;]
+</span></code></pre>
+<p>This pattern reduces the final image size by 60-80% in many cases.</p>
+<h2 id="optimize-layer-caching">Optimize Layer Caching</h2>
+<p>Docker builds images in layers, and each instruction creates a new layer. Order your Dockerfile to maximize cache hits:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#65737e;"># Good: Dependencies change less frequently than source code
+</span><span>COPY package*.json ./
+</span><span>RUN npm ci
+</span><span>COPY . .
+</span><span>
+</span><span style="color:#65737e;"># Bad: Copying everything first invalidates cache on any file change
+</span><span>COPY . .
+</span><span>RUN npm ci
+</span></code></pre>
+<h2 id="use-specific-base-image-tags">Use Specific Base Image Tags</h2>
+<p>Never use the <code>latest</code> tag in production:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#65737e;"># Bad
+</span><span style="color:#b48ead;">FROM</span><span> node:latest
+</span><span>
+</span><span style="color:#65737e;"># Good
+</span><span style="color:#b48ead;">FROM</span><span> node:18.17.1-alpine
+</span></code></pre>
+<p>Specific tags ensure reproducible builds and prevent unexpected breaking changes.</p>
+<h2 id="run-as-non-root-user">Run as Non-Root User</h2>
+<p>Running containers as root is a security risk. Create and use a non-privileged user:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#b48ead;">FROM</span><span> node:18-alpine
+</span><span>
+</span><span style="color:#65737e;"># Create app user
+</span><span style="color:#b48ead;">RUN </span><span>addgroup -g 1001 -S nodejs &amp;&amp; \
+</span><span>    adduser -S nodejs -u 1001
+</span><span>
+</span><span style="color:#65737e;"># Set ownership
+</span><span style="color:#b48ead;">WORKDIR </span><span>/app
+</span><span style="color:#b48ead;">COPY</span><span> --chown=nodejs:nodejs . .
+</span><span>
+</span><span style="color:#65737e;"># Switch to non-root user
+</span><span style="color:#b48ead;">USER </span><span>nodejs
+</span><span>
+</span><span>CMD [&quot;</span><span style="color:#a3be8c;">node</span><span>&quot;, &quot;</span><span style="color:#a3be8c;">index.js</span><span>&quot;]
+</span></code></pre>
+<h2 id="minimize-image-size">Minimize Image Size</h2>
+<p>Smaller images mean faster deployments and reduced attack surface:</p>
+<ol>
+<li><strong>Use Alpine-based images</strong> when possible (node:alpine, python:alpine)</li>
+<li><strong>Remove unnecessary files</strong> in the same layer they're created</li>
+<li><strong>Use .dockerignore</strong> to exclude files from the build context</li>
+</ol>
+<pre data-lang="dockerignore" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerignore "><code class="language-dockerignore" data-lang="dockerignore"><span>node_modules
+</span><span>npm-debug.log
+</span><span>.git
+</span><span>.env
+</span><span>*.md
+</span><span>tests
+</span></code></pre>
+<h2 id="handle-secrets-securely">Handle Secrets Securely</h2>
+<p>Never hardcode secrets in Dockerfiles or images:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#65737e;"># Bad
+</span><span>ENV API_KEY=secret123
+</span><span>
+</span><span style="color:#65737e;"># Good: Use build-time secrets
+</span><span>RUN --mount=type=secret,id=api_key \
+</span><span>    API_KEY=$(cat /run/secrets/api_key) npm run configure
+</span></code></pre>
+<p>In production, use environment variables, Docker secrets, or dedicated secret management tools like Vault.</p>
+<h2 id="implement-health-checks">Implement Health Checks</h2>
+<p>Health checks help orchestration platforms determine if your container is functioning correctly:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span>HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+</span><span>  CMD node healthcheck.js || exit 1
+</span></code></pre>
+<h2 id="use-entrypoint-and-cmd-correctly">Use ENTRYPOINT and CMD Correctly</h2>
+<p>ENTRYPOINT defines the executable, while CMD provides default arguments:</p>
+<pre data-lang="dockerfile" style="background-color:#2b303b;color:#c0c5ce;" class="language-dockerfile "><code class="language-dockerfile" data-lang="dockerfile"><span>ENTRYPOINT [&quot;node&quot;]
+</span><span>CMD [&quot;index.js&quot;]
+</span></code></pre>
+<p>This allows users to override arguments: <code>docker run myimage server.js</code></p>
+<h2 id="scan-for-vulnerabilities">Scan for Vulnerabilities</h2>
+<p>Regularly scan your images for security vulnerabilities:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">docker</span><span> scan myimage:latest
+</span></code></pre>
+<p>Tools like Trivy, Snyk, and Clair can integrate into CI/CD pipelines to catch vulnerabilities before deployment.</p>
+<h2 id="log-to-stdout-stderr">Log to STDOUT/STDERR</h2>
+<p>Containers should log to standard output and error streams, not files:</p>
+<pre data-lang="javascript" style="background-color:#2b303b;color:#c0c5ce;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#65737e;">// Good
+</span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">log</span><span>(&#39;</span><span style="color:#a3be8c;">Server started</span><span>&#39;);
+</span><span style="color:#ebcb8b;">console</span><span>.</span><span style="color:#96b5b4;">error</span><span>(&#39;</span><span style="color:#a3be8c;">Error occurred</span><span>&#39;);
+</span><span>
+</span><span style="color:#65737e;">// Bad (in containers)
+</span><span style="color:#bf616a;">fs</span><span>.</span><span style="color:#8fa1b3;">appendFileSync</span><span>(&#39;</span><span style="color:#a3be8c;">/var/log/app.log</span><span>&#39;, &#39;</span><span style="color:#a3be8c;">Server started</span><span>&#39;);
+</span></code></pre>
+<p>This integrates with Docker's logging drivers and centralized logging solutions.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Following these best practices will result in Docker images that are secure, efficient, and production-ready. The key principles are:</p>
+<ul>
+<li>Keep images small</li>
+<li>Optimize for caching</li>
+<li>Follow security best practices</li>
+<li>Make containers observable</li>
+<li>Ensure reproducibility</li>
+</ul>
+<p>By investing time in proper Dockerization, you'll save countless hours in debugging, security incidents, and deployment issues.</p>
+
+    </div>
+</article>
+
+<div class="prev_next">
+<nav id="prev_next">
+    <div class="prev">
+        
+    </div>
+    <div class="next">
+        
+    </div>
+</nav>
+</div>
+
+<div class="post-comment">
+
+
+
+
+</div>
+
+    </main>
+    
+    <p class="license"></p>
+    
+</body>
+</html>

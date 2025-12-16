@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="https://deadkai.github.io/atom.xml">
+    
+    
+    
+        
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>Git Rebase vs Merge: When to Use Each - title</title>
+    <meta charset="utf-8">
+    <meta name="title" content="Git Rebase vs Merge: When to Use Each - title">
+    <meta name="description" content="">
+    <meta property="og:image:width" content="200" />
+    <meta property="og:image:height" content="200" />
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/style.css">
+    
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;deadkai.github.io/autodarkmode.css">
+    
+    
+    <style>
+    @media screen and (min-width: 320px) {
+        body {
+            font-size: calc(16px + 2 * ((100vw - 320px) / 960));
+        }
+    }
+    </style>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&amp;family=Noto+Serif+KR:wght@400;700&amp;Noto+Serif+SC:wght@400;700&display=swap">
+    <style>body { font-family: 'Source Serif Pro', 'Source Han Serif TC', 'Noto Serif CJK TC', 'Noto Serif TC', 'Noto Serif KR', 'Noto Serif SC', serif }</style>
+    
+
+    <!-- MathJax Latex Support Script-->
+    
+
+</head>
+<body>
+    
+    <header class="header">
+        <div class="blog-title"><a href="https:&#x2F;&#x2F;deadkai.github.io" class="logo">title</a></div>
+        <nav class="navbar">
+    <ul class="menu">
+        
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;" class="menu-item-link">home</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;archives" class="menu-item-link">archives</a>
+            
+        </li>
+        
+        <li class="menu-item">
+            
+            
+            
+            
+            <a href="https:&#x2F;&#x2F;deadkai.github.io&#x2F;about" class="menu-item-link">about</a>
+            
+        </li>
+        
+    </ul>
+</nav>
+
+    </header>
+    
+    <main class="main">
+        
+<article class="post">
+    <div class="post-title">
+        <h1 class="title">Git Rebase vs Merge: When to Use Each</h1>
+    </div>
+    <div class="post-content">
+        <p>One of the most debated topics in Git workflows is whether to use <code>git merge</code> or <code>git rebase</code>. Both accomplish the same goal—integrating changes from one branch into another—but they do so in fundamentally different ways.</p>
+<h2 id="understanding-git-merge">Understanding Git Merge</h2>
+<p>Merge creates a new &quot;merge commit&quot; that ties together the histories of both branches:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> checkout main
+</span><span style="color:#bf616a;">git</span><span> merge feature-branch
+</span></code></pre>
+<p>This creates a commit with two parents, preserving the complete history of both branches.</p>
+<h3 id="advantages-of-merge">Advantages of Merge</h3>
+<ul>
+<li><strong>Preserves complete history</strong>: Every commit remains exactly as it was created</li>
+<li><strong>Non-destructive</strong>: Doesn't change existing commits</li>
+<li><strong>Clear feature boundaries</strong>: Easy to see when features were integrated</li>
+<li><strong>Safe for public branches</strong>: No risk of rewriting shared history</li>
+</ul>
+<h3 id="disadvantages-of-merge">Disadvantages of Merge</h3>
+<ul>
+<li><strong>Cluttered history</strong>: Many merge commits can make history hard to follow</li>
+<li><strong>Confusing graph</strong>: Complex branching patterns emerge in active repositories</li>
+<li><strong>Polluted logs</strong>: <code>git log</code> output becomes verbose and harder to read</li>
+</ul>
+<h2 id="understanding-git-rebase">Understanding Git Rebase</h2>
+<p>Rebase rewrites commits from one branch onto another, creating a linear history:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> checkout feature-branch
+</span><span style="color:#bf616a;">git</span><span> rebase main
+</span></code></pre>
+<p>This replays your feature commits on top of main, creating new commits with different hashes.</p>
+<h3 id="advantages-of-rebase">Advantages of Rebase</h3>
+<ul>
+<li><strong>Clean, linear history</strong>: Makes project history much easier to follow</li>
+<li><strong>Simplified logs</strong>: <code>git log</code> output is straightforward and readable</li>
+<li><strong>Easier bisecting</strong>: Finding bugs with <code>git bisect</code> is more efficient</li>
+<li><strong>Professional commits</strong>: Opportunity to clean up commit history before merging</li>
+</ul>
+<h3 id="disadvantages-of-rebase">Disadvantages of Rebase</h3>
+<ul>
+<li><strong>Rewrites history</strong>: Changes commit hashes, which can be dangerous</li>
+<li><strong>Requires force pushing</strong>: Can overwrite others' work if not careful</li>
+<li><strong>Conflicts can be tedious</strong>: May need to resolve the same conflict multiple times</li>
+<li><strong>Loses context</strong>: When a feature was actually developed becomes unclear</li>
+</ul>
+<h2 id="the-golden-rule-of-rebasing">The Golden Rule of Rebasing</h2>
+<p><strong>Never rebase commits that have been pushed to a public repository and that others might have based work on.</strong></p>
+<p>Rebasing rewrites history. If others have based work on your commits, rebasing will create divergent histories and cause serious problems.</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># Safe: Rebasing local commits not yet pushed
+</span><span style="color:#bf616a;">git</span><span> rebase main
+</span><span>
+</span><span style="color:#65737e;"># Dangerous: Rebasing commits others might have pulled
+</span><span style="color:#bf616a;">git</span><span> rebase main  </span><span style="color:#65737e;"># on a shared feature branch
+</span><span style="color:#bf616a;">git</span><span> push</span><span style="color:#bf616a;"> --force  </span><span style="color:#65737e;"># DON&#39;T DO THIS on shared branches!
+</span></code></pre>
+<h2 id="recommended-workflow">Recommended Workflow</h2>
+<p>Here's a practical approach that combines both strategies:</p>
+<h3 id="for-feature-branches">For Feature Branches</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># While developing, rebase frequently to stay up-to-date
+</span><span style="color:#bf616a;">git</span><span> fetch origin
+</span><span style="color:#bf616a;">git</span><span> rebase origin/main
+</span><span>
+</span><span style="color:#65737e;"># Clean up your commits before merging
+</span><span style="color:#bf616a;">git</span><span> rebase</span><span style="color:#bf616a;"> -i</span><span> origin/main
+</span><span>
+</span><span style="color:#65737e;"># When ready to merge into main
+</span><span style="color:#bf616a;">git</span><span> checkout main
+</span><span style="color:#bf616a;">git</span><span> merge feature-branch</span><span style="color:#bf616a;"> --no-ff
+</span></code></pre>
+<h3 id="interactive-rebase-for-cleanup">Interactive Rebase for Cleanup</h3>
+<p>Before merging, clean up your commit history:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> rebase</span><span style="color:#bf616a;"> -i</span><span> HEAD</span><span style="color:#bf616a;">~</span><span>5
+</span></code></pre>
+<p>This allows you to:</p>
+<ul>
+<li><strong>Squash</strong> related commits together</li>
+<li><strong>Reword</strong> commit messages for clarity</li>
+<li><strong>Reorder</strong> commits logically</li>
+<li><strong>Drop</strong> commits that aren't needed</li>
+</ul>
+<h2 id="common-scenarios">Common Scenarios</h2>
+<h3 id="scenario-1-keeping-feature-branch-updated">Scenario 1: Keeping Feature Branch Updated</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># On feature-branch
+</span><span style="color:#bf616a;">git</span><span> fetch origin
+</span><span style="color:#bf616a;">git</span><span> rebase origin/main
+</span></code></pre>
+<p>Use rebase to keep your feature branch up-to-date with main. This keeps history clean and makes the eventual merge smooth.</p>
+<h3 id="scenario-2-integrating-complete-features">Scenario 2: Integrating Complete Features</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># On main
+</span><span style="color:#bf616a;">git</span><span> merge feature-branch</span><span style="color:#bf616a;"> --no-ff
+</span></code></pre>
+<p>Use merge when incorporating a complete feature. The merge commit serves as documentation of when the feature was integrated.</p>
+<h3 id="scenario-3-cleaning-up-before-merging">Scenario 3: Cleaning Up Before Merging</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#65737e;"># On feature-branch
+</span><span style="color:#bf616a;">git</span><span> rebase</span><span style="color:#bf616a;"> -i</span><span> origin/main
+</span><span style="color:#65737e;"># Clean up commits
+</span><span style="color:#bf616a;">git</span><span> checkout main
+</span><span style="color:#bf616a;">git</span><span> merge feature-branch</span><span style="color:#bf616a;"> --no-ff
+</span></code></pre>
+<p>Combine both: rebase to clean up, then merge to integrate.</p>
+<h2 id="team-workflow-considerations">Team Workflow Considerations</h2>
+<p>Your team should agree on a strategy:</p>
+<h3 id="merge-only-workflow">Merge-Only Workflow</h3>
+<ul>
+<li>Simple and safe</li>
+<li>Good for teams new to Git</li>
+<li>Preserves all history</li>
+<li>Can become messy in large projects</li>
+</ul>
+<h3 id="rebase-only-workflow">Rebase-Only Workflow</h3>
+<ul>
+<li>Clean, linear history</li>
+<li>Requires discipline and Git expertise</li>
+<li>Works well for small, experienced teams</li>
+<li>Can be dangerous without careful coordination</li>
+</ul>
+<h3 id="hybrid-workflow-recommended">Hybrid Workflow (Recommended)</h3>
+<ul>
+<li>Rebase feature branches on main to stay current</li>
+<li>Squash/clean commits before integration</li>
+<li>Merge feature branches into main with --no-ff</li>
+<li>Never rebase public/shared branches</li>
+</ul>
+<h2 id="handling-conflicts">Handling Conflicts</h2>
+<h3 id="during-merge">During Merge</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> merge feature-branch
+</span><span style="color:#65737e;"># Fix conflicts in files
+</span><span style="color:#bf616a;">git</span><span> add .
+</span><span style="color:#bf616a;">git</span><span> commit
+</span></code></pre>
+<h3 id="during-rebase">During Rebase</h3>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">git</span><span> rebase main
+</span><span style="color:#65737e;"># Fix conflicts in files
+</span><span style="color:#bf616a;">git</span><span> add .
+</span><span style="color:#bf616a;">git</span><span> rebase</span><span style="color:#bf616a;"> --continue
+</span><span style="color:#65737e;"># Repeat for each commit
+</span></code></pre>
+<p>Rebase conflicts can be more tedious since you might resolve similar conflicts multiple times.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Neither merge nor rebase is universally better—they serve different purposes:</p>
+<ul>
+<li><strong>Use merge</strong> for integrating completed features and when preserving exact history matters</li>
+<li><strong>Use rebase</strong> for keeping feature branches current and cleaning up local commits</li>
+<li><strong>Never rebase</strong> commits that others might be using</li>
+</ul>
+<p>The key is consistency. Your team should establish and document a clear workflow that everyone follows. Understanding both tools allows you to choose the right one for each situation.</p>
+
+    </div>
+</article>
+
+<div class="prev_next">
+<nav id="prev_next">
+    <div class="prev">
+        
+    </div>
+    <div class="next">
+        
+    </div>
+</nav>
+</div>
+
+<div class="post-comment">
+
+
+
+
+</div>
+
+    </main>
+    
+    <p class="license"></p>
+    
+</body>
+</html>
