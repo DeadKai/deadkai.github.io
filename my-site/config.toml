@@ -18,3 +18,15 @@ seje_menu_links = [
     {url = "$BASE_URL/atom.xml", name = "rss"},
 ]
 
+[languages.en.translations]
+title = "title"
+home = "home"
+archives = "archives"
+about = "about"
+rss = "rss"
+more = "more"
+olderArticle = "olderArticle"
+newer = "newer"
+older = "older"
+loading = "loading"
+
