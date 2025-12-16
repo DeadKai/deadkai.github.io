@@ -3,6 +3,7 @@ theme = "Seje2"
 compile_sass = true
 default_language = "en"
 generate_feeds = true
+feed_filenames = ["atom.xml", "rss.xml"]
 build_search_index = false
 
 [markdown]

@@ -1,10 +1,9 @@
 +++
-title = "ABOUT"
-
-[extra]
-year = 2019
-month = 11
-day = 3
+title = "About"
 +++
 
-TERE [这句话](https://blog.yitianshijie.net/2016/07/12/nugget-from-anthony-wong-interview-u-magazine-hk-2016/)，
+# About Me
+
+This is my personal blog where I share thoughts and technical articles about software development, programming languages, and system design.
+
+Feel free to browse through my posts and reach out if you'd like to connect!
